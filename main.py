@@ -38,6 +38,26 @@ modelo.compile(loss='mean_squared_error', optimizer=sgd)
 modelo.summary()
 
 # Entrenamiento del modelo
-num_epochs = 1000
+num_epochs = 40000
 batch_size = len(x)  
 historial = modelo.fit(x, y, epochs=num_epochs, batch_size=batch_size, verbose=1)
+
+# Obtener los pesos del modelo entrenado
+capas = modelo.layers[0]
+w, b = capas.get_weights()
+print(f'Parámetros: w = {w[0][0]:.1f}, b = {b[0]:.1f}')
+
+# Graficar la pérdida (ECM) a lo largo de las épocas
+plt.subplot(1, 2, 1)
+plt.plot(historial.history['loss'])
+plt.xlabel('Epoch')
+plt.ylabel('ECM')
+plt.title('ECM vs. epochs')
+
+# Graficar los datos originales y la regresión lineal
+y_regr = modelo.predict(x)
+plt.subplot(1, 2, 2)
+plt.scatter(x, y)
+plt.plot(x, y_regr, 'r')
+plt.title('Datos originales y regresión lineal')
+plt.show()
